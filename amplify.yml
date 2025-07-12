@@ -1,0 +1,20 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - echo "Environment check - AWS_REGION=${AWS_REGION:-not_set}"
+        - echo "Environment check - APP_AWS_REGION=${APP_AWS_REGION:-not_set}"
+        - echo "Environment check - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:+SET}"
+        - echo "Environment check - APP_AWS_ACCESS_KEY_ID=${APP_AWS_ACCESS_KEY_ID:+SET}"
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
