@@ -90,9 +90,15 @@ interface TitanPayload {
 type ModelPayload = StabilityPayload | TitanPayload;
 
 export async function POST(request: NextRequest) {
+  let model: string = '';
+  let isStabilityModel = false;
+  
   try {
     const body = await request.json();
-    const { model, positivePrompt, negativePrompt, inputImage, imageStrength, ...otherParams } = body;
+    const { model: requestModel, positivePrompt, negativePrompt, inputImage, imageStrength, ...otherParams } = body;
+    
+    model = requestModel;
+    isStabilityModel = model.startsWith('stability.') || model.startsWith('stable') || model === 'sd3-large' || model === 'sd3.5-large';
 
     console.log('Request received:', { model, positivePrompt, negativePrompt, hasInputImage: !!inputImage, imageStrength, otherParams });
     console.log('Environment check:', {
@@ -120,7 +126,6 @@ export async function POST(request: NextRequest) {
 
     // Validate and clamp CFG scale based on model type
     let cfgScale = otherParams.cfgScale || 7;
-    const isStabilityModel = model.startsWith('stability.') || model.startsWith('stable') || model === 'sd3-large' || model === 'sd3.5-large';
     
     if (isStabilityModel) {
       // Stability models support CFG scale up to 20

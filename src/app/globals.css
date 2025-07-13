@@ -21,6 +21,17 @@
   --accent-primary: #0ea5e9;
 }
 
+/* Layout styles */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  min-height: calc(100vh - 80px); /* Account for header height */
+  padding-top: 1rem;
+}
+
 /* Dark mode overrides for Amplify UI components */
 @media (prefers-color-scheme: dark) {
   /* Main background and text colors */

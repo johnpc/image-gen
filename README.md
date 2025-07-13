@@ -1,6 +1,6 @@
-# AI Image Generator
+# image-gen.jpc.io
 
-A Next.js application that uses AWS Bedrock to generate images with various AI models including Stable Diffusion, Titan, and Nova Canvas.
+A modern Next.js application that uses AWS Bedrock to generate images with various AI models including Amazon Nova Canvas, Titan, and Stability AI models.
 
 ## Features
 
@@ -26,6 +26,8 @@ A Next.js application that uses AWS Bedrock to generate images with various AI m
   - Refresh models button to reload available options
 
 - **Modern UI**: Built with Amplify UI React components for a clean, responsive interface
+- **Professional Branding**: Custom AI-generated icon and header with consistent branding
+- **Optimized Performance**: No hydration errors, proper favicon support, and PWA-ready manifest
 
 ## Setup
 

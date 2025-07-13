@@ -145,6 +145,7 @@ export default function Home() {
   };
 
   const [formData, setFormData] = useState<FormData>(getInitialFormData);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -224,6 +225,7 @@ export default function Home() {
     if (typeof window !== 'undefined') {
       const initialData = getInitialFormData();
       setFormData(initialData);
+      setIsHydrated(true);
     }
   }, []);
 
@@ -400,12 +402,20 @@ export default function Home() {
     }
   };
 
-  const isStabilityModel = formData.model.includes('stabl') ||
-                          formData.model === 'sd3-large' ||
-                          formData.model === 'sd3.5-large';
+  // Use safe defaults during SSR to prevent hydration mismatch
+  const isStabilityModel = isHydrated ? (
+    formData.model.includes('stabl') ||
+    formData.model === 'sd3-large' ||
+    formData.model === 'sd3.5-large'
+  ) : false; // Default to false during SSR since default model is Nova Canvas
 
   // Determine CFG Scale limits based on model type
   const getCfgScaleLimits = () => {
+    // During SSR, always return the safe default limits to prevent hydration mismatch
+    if (!isHydrated) {
+      return { min: 1, max: 10, step: 0.5 }; // Safe default for Nova Canvas
+    }
+    
     if (formData.model.startsWith('stability.') || isStabilityModel) {
       return { min: 1, max: 20, step: 0.5 }; // Stability models support higher CFG
     } else {
@@ -425,7 +435,6 @@ export default function Home() {
   return (
     <View padding="1rem">
       <Flex direction="column" alignItems="center" gap="2rem">
-        <Heading level={1} className="gradient-text">AI Image Generator</Heading>
 
         {/* Model Loading Error Alert */}
         {modelLoadError && (
